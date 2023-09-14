@@ -1,0 +1,2 @@
+multipass.exe launch --name suricata --cpus 6 --memory 4G --disk 160G --cloud-init ./cloud-config.yaml 22.04 --timeout 600
+Get-NetIPInterface | where {$_.InterfaceAlias -eq 'vEthernet (WSL)' -or $_.InterfaceAlias -eq 'vEthernet (Default Switch)'} | Set-NetIPInterface -Forwarding Enabled

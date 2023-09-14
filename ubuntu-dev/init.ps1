@@ -1,0 +1,2 @@
+multipass.exe launch --name ubuntu-dev --cpus 6 --mem 16G --disk 160G --cloud-init ./cloud-config.yaml 20.04
+Get-NetIPInterface | where {$_.InterfaceAlias -eq 'vEthernet (WSL)' -or $_.InterfaceAlias -eq 'vEthernet (Default Switch)'} | Set-NetIPInterface -Forwarding Enabled

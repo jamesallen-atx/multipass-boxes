@@ -1,0 +1,15 @@
+#cloud-config
+
+runcmd:
+  - apt-get install -y iptables-persistent
+  - export DEBIAN_FRONTEND=noninteractive
+  - export DEBIAN_PRIORITY=critical 
+  - apt install -y libedit2 libpq5 libssl1.0.0 postgresql-client-common zlib1g libgssapi-krb5-2 libldap-2.4-2 libpam0g libxml2 postgresql-common locales ssl-cert tzdata sysstat 
+  - wget http://security.debian.org/debian-security/pool/updates/main/p/postgresql-9.6/postgresql-9.6_9.6.17-0+deb9u1_amd64.deb
+  - wget http://security.debian.org/debian-security/pool/updates/main/p/postgresql-9.6/postgresql-client-9.6_9.6.17-0+deb9u1_amd64.deb
+  - dpkg -i postgresql-9.6_9.6.17-0+deb9u1_amd64.deb postgresql-client-9.6_9.6.17-0+deb9u1_amd64.deb
+  - sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/9.6/main/postgresql.conf
+  - sed -i 's/^host.*all.*all.*127.0.0.1\/32.*md5/host\tall\t\tall\t\t0.0.0.0\/0\t\tmd5/g' /etc/postgresql/9.6/main/pg_hba.conf
+  - su -c "psql -d postgres -c \"ALTER USER postgres WITH PASSWORD 'StrongPassw0rd';\"" postgres
+  - ufw allow 5432/tcp
+  - systemctl restart postgresql

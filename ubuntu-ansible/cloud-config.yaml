@@ -1,0 +1,8 @@
+#cloud-config
+
+users:
+- name: multipass
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJzprgtIbg2XDUpGNqF+kv3TeMWH2Xd3emzjZZsSDcc5Mumk3IUFrjHcfwS+PVpJK63sQ6M8zU9n6tXX+hjqM4G6sABxhqGHiqU5bEu8lQMFTBX0GlscSbsFKN+ECco42aZe4+4BJCNNpVHMmgLkX7P7wvH2iN2cptTZTuyrt8DUsi7ozhc50YFRou16AyUrxZ2Jioqib5ZosQZnkOn3cA0nBZCqgM2qFMyq3IenQxPKN+PTquOUpySPG8OGDwug/Sxzq/EtExXFQ5AzaOIV2HbJb6AESLcnTG9iopNOnuUxPuqVF+yHXVtAm3oEkkA9TJe4u1Ga34gC5n3Th3E0ll multipass.local
+

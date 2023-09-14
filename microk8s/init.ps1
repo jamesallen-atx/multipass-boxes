@@ -1,0 +1,2 @@
+multipass.exe launch --name microk8s --cpus 4 --mem 4G --disk 15G --cloud-init ./cloud-config.yaml
+Get-NetIPInterface | where {$_.InterfaceAlias -eq 'vEthernet (WSL)' -or $_.InterfaceAlias -eq 'vEthernet (Default Switch)'} | Set-NetIPInterface -Forwarding Enabled

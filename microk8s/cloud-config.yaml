@@ -1,0 +1,21 @@
+#cloud-config
+
+snap:
+  commands:
+      00: snap install microk8s --classic
+      
+runcmd:
+  - apt-get install -y iptables-persistent
+  - iptables -P FORWARD ACCEPT
+  - iptables-save > /etc/iptables/rules.v4
+  - usermod -a -G microk8s ubuntu
+  - chown -f -R ubuntu /home/ubuntu/.kube
+  - microk8s.enable dns
+  - microk8s.enable fluentd
+  - microk8s.enable helm3
+  - microk8s.enable ingress
+  - microk8s.enable metallb:172.16.0.2-172.16.0.2
+  - microk8s.enable metrics-server
+  - microk8s.enable registry
+  - microk8s.enable storage
+  - microk8s.start

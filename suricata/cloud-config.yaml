@@ -1,0 +1,65 @@
+#cloud-config
+
+write_files:
+  - path: /usr/local/etc/suricata/rules/rule1
+    permissions: 0644
+    content: |
+      alert http any any -> any any (msg:"HTTP to duckduckgo.com"; content:"Host: duckduckgo.com"; sid:100001; rev:1;)
+
+  - path: /usr/local/etc/suricata/rules/rule2
+    permissions: 0644
+    content: |
+      alert http any any -> any any (msg:"HTTP to example.com"; content:"Host: example.com"; sid:100002; rev:1;)
+  
+  - path: /opt/suricata/suricata.yaml
+    permissions: 0644
+    content: |
+      %YAML 1.1
+      ---
+      stream:
+        memcap: 2gb
+        checksum-validation: no       # reject wrong csums
+        inline: auto                  # auto will use inline mode in IPS mode, yes or no set it statically
+        reassembly:
+          memcap: 2gb
+          depth: 1mb                  # reassemble 1mb into a stream
+          toserver-chunk-size: 2560
+          toclient-chunk-size: 2560
+          randomize-chunk-size: yes
+      default-rule-path: /usr/local/etc/suricata/rules
+      rule-files:
+        - /var/lib/suricata/rules/suricata.rules
+        - rule1
+        - rule2
+
+  
+  - path: /etc/logrotate.d/suricata
+    permissions: 0644
+    content: |
+      /var/log/suricata/*.log /var/log/suricata/*.json {
+      daily
+      missingok
+      rotate 3
+      nocompress
+      sharedscripts
+      postrotate
+          suricatasc -c reopen-log-files
+      endscript
+      }
+ 
+runcmd:
+  - mkdir -p /tmp/suricata
+  - cd /tmp/suricata
+  - apt update && apt upgrade -y
+  - apt-get -y install libpcre2-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev pkg-config zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 make libmagic-dev libjansson-dev rustc cargo jq git-core
+  - wget https://www.openinfosecfoundation.org/download/suricata-7.0.0-rc2.tar.gz
+  - tar -xvf suricata-7.0.0-rc2.tar.gz
+  - export PATH=$PATH:${HOME}/.cargo/bin
+  - cargo install --force cbindgen
+  - cd suricata-7.0.0-rc2 
+  - ./configure --sysconfdir=/etc --localstatedir=/var && make && make install-full
+  - ldconfig
+
+
+
+ 
